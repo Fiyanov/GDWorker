@@ -16,7 +16,7 @@ class GDWorker
 
     public function __constructor()
     {
-
+        
     }
 
     static function &get_instance()
