@@ -151,8 +151,6 @@ class GDWorker
 
     private function _get_extention($file)
     {
-        if (preg_match("/[^\\.]+$/i", $file, $matches)) {
-            return $matches[0];
-        }
+        return pathinfo($file, PATHINFO_EXTENSION);
     }
 }
