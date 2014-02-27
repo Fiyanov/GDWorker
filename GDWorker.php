@@ -1,7 +1,8 @@
 <?php
 class GDWorker
 {
-    public $extension = array('jpg', 'jpeg', 'png', 'gif', 'bmp');
+    public $extensions = array('jpg', 'jpeg', 'png', 'gif', 'bmp');
+    public $output_extension = '';
     public $output_file = '';
     private $output_width = 100;
     private $output_height = 100;
@@ -30,6 +31,13 @@ class GDWorker
         return $instance;
     }
 
+    /**
+     * Загружает исходный файл
+     * 
+     * @param string $file путь к файлу
+     * @return GDWorker
+     * @throws Exception
+     */
     public function load($file)
     {
         if (file_exists($file)) {
@@ -54,6 +62,12 @@ class GDWorker
         }
     }
 
+    /**
+     * Сохраняет файл
+     * 
+     * @param string $file путь к файлу
+     * @return GDWorker
+     */
     public function save($file = '')
     {
         $this->output_image = imagecreatetruecolor($this->output_width, $this->output_height);
@@ -104,6 +118,13 @@ class GDWorker
         }
     }
 
+    /**
+     * Задать размер по ширине (высота задаётся пропорционально)
+     * 
+     * @param type $size ширина
+     * @return GDWorker
+     * @throws Exception
+     */
     public function set_size_by_width($size)
     {
         if ($size <= 0) {
@@ -117,6 +138,13 @@ class GDWorker
         return $this->get_instance();
     }
 
+    /**
+     * Задать размер по высоте (ширина задаётся пропорционально)
+     * 
+     * @param type $size высота
+     * @return GDWorker
+     * @throws Exception
+     */
     public function set_size_by_height($size)
     {
         if ($size <= 0) {
@@ -135,20 +163,38 @@ class GDWorker
 
     }
 
+    /**
+     * Возвращает расширение исходного файла (метод load())
+     * 
+     * @return GDWorker
+     */
     public function get_extension()
     {
-        return $this->file_extension;
+        return $this->source_extension;
     }
 
+    /**
+     * Устанавливает расширение сохраняемого файла (метод save())
+     * 
+     * @param string $ext расширение сохраняемого файла
+     * @return GDWorker
+     */
     public function set_extention($ext)
     {
-        $this->file_extension = $ext;
+        if (trim($ext) == '') {
+            throw new Exception("Не задано расширение файла!");
+        }
+            
+        if (!in_array($ext, $this->extensions)) {
+            throw new Exception("Неверно задано расширение файла!");
+        }
+        
+        $this->output_extension = $ext;
 
         return $this->get_instance();
     }
 
     //service
-
     private function _get_extention($file)
     {
         return pathinfo($file, PATHINFO_EXTENSION);
