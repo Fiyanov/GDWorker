@@ -194,7 +194,14 @@ class GDWorker
         return $this->get_instance();
     }
 
-    //service
+    //------------------------Сервисные (приватные) методы----------------------
+    
+    /**
+     * Возвращает расширение имени файла
+     * 
+     * @param string $file имя файла
+     * @return string расширение файла
+     */
     private function _get_extention($file)
     {
         return pathinfo($file, PATHINFO_EXTENSION);
