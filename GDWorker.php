@@ -14,6 +14,7 @@ class GDWorker
     private $source_image = null;
     private $mime = '';
     private $bits = 0;
+    private $quality = 100;
 
     public function __constructor()
     {
@@ -91,6 +92,14 @@ class GDWorker
     }
 
     /**
+     * Выводит изображение
+     */
+    public function show()
+    {
+        
+    }
+    
+    /**
      * Установить размер изображения
      *
      * Один из двух параметров может быть опущен, тогда его размер будет расчитан пропорционально заданному параметру
@@ -163,6 +172,19 @@ class GDWorker
 
     }
 
+   /**
+    * Устанавливает качество изображения (в процентах)
+    * 
+    * @param integer $quality качество
+    * @return GDWorker
+    */    
+    public function set_quality($quality)
+    {                
+        $this->quality = intval($quality);
+        
+        return $this->get_instance();
+    }
+    
     /**
      * Возвращает расширение исходного файла (метод load())
      * 
