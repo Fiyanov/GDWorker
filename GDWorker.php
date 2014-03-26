@@ -15,6 +15,7 @@ class GDWorker
     private $mime = '';
     private $bits = 0;
     private $quality = 100;
+    private $blur_iteration = 0;
 
     public function __constructor()
     {
@@ -74,9 +75,13 @@ class GDWorker
         $this->output_image = imagecreatetruecolor($this->output_width, $this->output_height);
         imagecopyresized($this->output_image, $this->source_image, 0, 0, 0, 0, $this->output_width, $this->output_height, $this->source_width, $this->source_height);
 
+        if ($this->blur_iteration){
+            $this->output_image = $this->blur($this->output_image);
+        }
+        
         if ($file) {
             $ext = $this->_get_extention($file);
-            if ($ext == 'jpg' or $ext == 'jpeg') {
+            if ($ext == 'jpg' or $ext == 'jpeg') {                                                                       
                 imagejpeg($this->output_image, $file, 100);
             }
             if ($ext == 'png') {
@@ -216,7 +221,37 @@ class GDWorker
         return $this->get_instance();
     }
 
+    public function set_blur($iteration)
+    {
+        $this->blur_iteration = intval($iteration);
+        
+        return $this->get_instance();
+    }
+    
     //------------------------Сервисные (приватные) методы----------------------
+    
+    /**
+     * Размывает изображение
+     * 
+     * @param type $img изображение (сам ресурс)
+     * @return type GDWorker
+     */
+    private function blur($img)
+    {
+        $gaussian = array(
+            array(1, 2, 1), 
+            array(2, 4, 2), 
+            array(1, 2, 1) 
+        );
+
+        $divisor = array_sum(array_map('array_sum', $gaussian)); 
+
+        for ($i = 0; $i < $this->blur_iteration; $i++){
+            imageconvolution($img, $gaussian, $divisor, 0);
+        }
+        
+        return $img;
+    }
     
     /**
      * Возвращает расширение имени файла
